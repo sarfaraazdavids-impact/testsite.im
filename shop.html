@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Browse all Purple Ostrich experiences — golf, go-karting, safari, and fine dining with the world's most ambitious bird." />
+  <title>Experiences — Purple Ostrich</title>
+
+  <!-- INSERT TRACKING SCRIPTS (GTM) HERE -->
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-P8TPXT83');</script>
+  <!-- End Google Tag Manager -->
+  <link rel="icon" type="image/png" href="https://fastshoes.co.za/jobse/images/Logo%20White.png" />
+  <link rel="stylesheet" href="https://fastshoes.co.za/jobse/otherfiles/style.css" />
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P8TPXT83"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <!-- ═══════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════ -->
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <img src="https://fastshoes.co.za/jobse/images/Logo%20White.png" alt="Purple Ostrich logo" style="height:42px; width:auto;" />
+        <span class="logo-text">The Purple Ostrich Experience</span>
+      </a>
+      <nav>
+        <a href="shop.html">Experiences</a>
+        <a href="cart.html" class="cart-link">
+          🛒 Cart
+          <span class="cart-count" id="cart-count" style="display:none;">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE HEADER
+    ═══════════════════════════════════════════ -->
+    <div class="page-header">
+      <h1>All Experiences</h1>
+      <p>Four activities. One ostrich. Absolutely zero chill. Pick your poison.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PRODUCTS GRID  (rendered by JS below)
+    ═══════════════════════════════════════════ -->
+    <section class="products-section">
+      <div class="products-grid" id="products-grid">
+        <!-- Product cards are injected by the inline script below -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer>
+    <p>
+      &copy; 2026 <strong>Purple Ostrich Experiences Ltd.</strong> &nbsp;·&nbsp;
+      <a href="index.html">Home</a> &nbsp;·&nbsp;
+      <a href="cart.html">Cart</a>
+    </p>
+  </footer>
+
+  <!-- Shared utilities (PRODUCTS, addToCart, etc.) must load first -->
+  <script src="https://fastshoes.co.za/jobse/otherfiles/script.js"></script>
+
+  <script>
+    // ── Render the product grid ────────────────────────────────
+
+    function renderProducts() {
+      const grid = document.getElementById('products-grid');
+
+      grid.innerHTML = PRODUCTS.map(product => `
+        <article class="product-card" data-product-id="${product.id}">
+
+          <div class="product-image-wrap">
+            <!-- Emoji placeholder — always visible underneath the real image -->
+            <div class="product-image-placeholder">
+              <span class="placeholder-icon">${product.emoji}</span>
+              <span>Image Coming Soon</span>
+            </div>
+            <!--
+              Real product image — overlays the placeholder when it loads.
+              Replace the src with your actual image path.
+              The onerror handler hides the <img> so the emoji placeholder shows through.
+            -->
+            <img
+              src="${product.image}"
+              alt="${product.imageAlt}"
+              onerror="this.style.display='none';"
+            />
+          </div>
+
+          <div class="product-body">
+            <span class="product-tag">⭐ Featured Experience</span>
+            <h3>${product.name}</h3>
+            <p>${product.description}</p>
+            <div class="product-footer">
+              <span class="product-price">$${product.price.toFixed(2)}</span>
+              <button
+                class="btn-add-cart"
+                onclick="handleAddToCart(${product.id}, this)"
+                aria-label="Add ${product.name} to cart"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+        </article>
+      `).join('');
+    }
+
+    // ── Add to cart with button feedback ──────────────────────
+
+    function handleAddToCart(productId, btn) {
+      addToCart(productId);
+
+      // Visual feedback
+      btn.textContent = '✓ Added!';
+      btn.classList.add('added');
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.textContent = 'Add to Cart';
+        btn.classList.remove('added');
+        btn.disabled = false;
+      }, 1600);
+    }
+
+    // Kick it off
+    renderProducts();
+  </script>
+
+</body>
+</html>

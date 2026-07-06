@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Review your Purple Ostrich cart and complete your booking." />
+  <title>Your Cart — Purple Ostrich</title>
+
+  <!-- INSERT TRACKING SCRIPTS (GTM) HERE -->
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-P8TPXT83');</script>
+  <!-- End Google Tag Manager -->
+
+
+
+  <link rel="icon" type="image/png" href="https://fastshoes.co.za/jobse/images/Logo%20White.png" />
+  <link rel="stylesheet" href="https://fastshoes.co.za/jobse/otherfiles/style.css" />
+</head>
+<body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P8TPXT83"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <!-- ═══════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════ -->
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <img src="https://fastshoes.co.za/jobse/images/Logo%20White.png" alt="Purple Ostrich logo" style="height:42px; width:auto;" />
+        <span class="logo-text">The Purple Ostrich Experience</span>
+      </a>
+      <nav>
+        <a href="shop.html">Experiences</a>
+        <a href="cart.html" class="cart-link">
+          🛒 Cart
+          <span class="cart-count" id="cart-count" style="display:none;">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE HEADER
+    ═══════════════════════════════════════════ -->
+    <div class="page-header">
+      <h1>🛒 Your Cart</h1>
+      <p>One step closer to the greatest — and most feathery — decision of your life.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         CART CONTENT  (rendered by JS below)
+    ═══════════════════════════════════════════ -->
+    <section class="cart-section">
+      <div id="cart-content">
+        <!-- Injected by renderCart() -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer>
+    <p>
+      &copy; 2026 <strong>Purple Ostrich Experiences Ltd.</strong> &nbsp;·&nbsp;
+      <a href="index.html">Home</a> &nbsp;·&nbsp;
+      <a href="shop.html">Shop</a>
+    </p>
+  </footer>
+
+  <script src="https://fastshoes.co.za/jobse/otherfiles/script.js"></script>
+
+  <script>
+    // ── Render helpers ─────────────────────────────────────────
+
+    /** Builds a single cart item row. */
+    function buildCartItemHTML(item) {
+      const lineTotal = (item.price * item.quantity).toFixed(2);
+      return `
+        <div class="cart-item" id="cart-item-${item.id}">
+          <div class="cart-item-thumb" aria-hidden="true">${item.emoji}</div>
+
+          <div class="cart-item-details">
+            <h4>${item.name}</h4>
+            <div class="cart-item-unit-price">$${item.price.toFixed(2)} each</div>
+            <div class="cart-item-controls">
+              <button class="qty-btn" onclick="changeQty(${item.id}, -1)" aria-label="Decrease quantity">−</button>
+              <span class="qty-display" id="qty-${item.id}">${item.quantity}</span>
+              <button class="qty-btn" onclick="changeQty(${item.id}, 1)"  aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+
+          <div class="cart-item-right">
+            <span class="cart-item-subtotal" id="subtotal-${item.id}">$${lineTotal}</span>
+            <button class="btn-remove" onclick="handleRemove(${item.id})" aria-label="Remove ${item.name} from cart" title="Remove">✕</button>
+          </div>
+        </div>
+      `;
+    }
+
+    /** Renders the full cart page (items + summary sidebar, or empty state). */
+    function renderCart() {
+      const cart      = getCart();
+      const container = document.getElementById('cart-content');
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-cart-icon">🛒</div>
+            <h2>Your cart is as empty as the ostrich's trophy cabinet.</h2>
+            <p>Pick an experience and let's get this ridiculous party started.</p>
+            <a href="shop.html" class="btn btn-primary">Browse Experiences</a>
+          </div>
+        `;
+        return;
+      }
+
+      const subtotal = getCartTotal();
+      const tax      = subtotal * 0.10;   // 10% "Ostrich Handling Fee"
+      const total    = subtotal + tax;
+
+      container.innerHTML = `
+        <div class="cart-layout">
+
+          <!-- Items column -->
+          <div>
+            <div class="cart-items-list" id="cart-items-list">
+              ${cart.map(buildCartItemHTML).join('')}
+            </div>
+            <div style="margin-top:1.2rem;">
+              <a href="shop.html" class="btn btn-outline" style="font-size:0.9rem; padding:0.58rem 1.2rem;">
+                ← Continue Shopping
+              </a>
+            </div>
+          </div>
+
+          <!-- Summary sidebar -->
+          <aside class="cart-summary">
+            <h3>Order Summary</h3>
+
+            <div class="summary-line">
+              <span>Subtotal</span>
+              <span>$${subtotal.toFixed(2)}</span>
+            </div>
+            <div class="summary-line">
+              <span>Ostrich Handling Fee (10%)</span>
+              <span>$${tax.toFixed(2)}</span>
+            </div>
+            <div class="summary-line" style="font-size:0.8rem; color:var(--gray-600); margin-top:-0.2rem;">
+              <span><em>He insists. We've tried negotiating.</em></span>
+            </div>
+
+            <div class="summary-total">
+              <span>Total</span>
+              <span>$${total.toFixed(2)}</span>
+            </div>
+
+            <!--
+              PAY NOW BUTTON
+              Clicking this does NOT collect card details.
+              Instead it shows a "Processing..." spinner for 3 seconds,
+              saves the order to localStorage, then redirects to confirmation.html.
+            -->
+            <button class="pay-btn" id="pay-btn" onclick="handleCheckout()">
+              💳 Pay Now — $${total.toFixed(2)}
+            </button>
+
+            <p style="font-size:0.78rem; color:var(--gray-600); margin-top:1rem; text-align:center; line-height:1.5;">
+              🔒 Simulated checkout &mdash; no real payment is taken.<br/>
+              <em>(The ostrich accepts cash, feathers, and moral support.)</em>
+            </p>
+          </aside>
+
+        </div>
+      `;
+    }
+
+    // ── Quantity & remove actions ──────────────────────────────
+
+    function changeQty(productId, delta) {
+      updateItemQuantity(productId, delta);
+      renderCart();   // full re-render keeps totals in sync
+    }
+
+    function handleRemove(productId) {
+      removeFromCart(productId);
+      renderCart();
+    }
+
+    // ── Checkout flow ──────────────────────────────────────────
+
+    function handleCheckout() {
+      const cart = getCart();
+      if (cart.length === 0) return;
+
+      const subtotal  = getCartTotal();
+      const tax       = parseFloat((subtotal * 0.10).toFixed(2));
+      const total     = parseFloat((subtotal + tax).toFixed(2));
+      const orderId   = generateOrderId();
+      const timestamp = new Date().toISOString();
+
+      // Persist order data so confirmation.html can read it
+      const order = {
+        orderId,
+        items:     cart,
+        subtotal:  parseFloat(subtotal.toFixed(2)),
+        tax,
+        total,
+        timestamp
+      };
+      localStorage.setItem(ORDER_KEY, JSON.stringify(order));
+
+      // ── Show "Processing..." spinner (3-second simulated payment) ──
+      const payBtn = document.getElementById('pay-btn');
+      payBtn.disabled = true;
+      payBtn.innerHTML = `<span class="spinner" aria-hidden="true"></span> Processing...`;
+
+      setTimeout(() => {
+        window.location.href = 'confirmation.html';
+      }, 3000);
+    }
+
+    // Initialise
+    renderCart();
+  </script>
+
+</body>
+</html>

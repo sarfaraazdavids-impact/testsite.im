@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Your Purple Ostrich booking is confirmed. The ostrich has been notified." />
+  <title>Order Confirmed! — Purple Ostrich</title>
+
+  <!-- INSERT TRACKING SCRIPTS (GTM) HERE -->
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-P8TPXT83');</script>
+  <!-- End Google Tag Manager -->
+  <link rel="icon" type="image/png" href="https://fastshoes.co.za/jobse/images/Logo%20White.png" />
+  <link rel="stylesheet" href="https://fastshoes.co.za/jobse/otherfiles/style.css" />
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P8TPXT83"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <!-- ═══════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════ -->
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <img src="https://fastshoes.co.za/jobse/images/Logo%20White.png" alt="Purple Ostrich logo" style="height:42px; width:auto;" />
+        <span class="logo-text">The Purple Ostrich Experience</span>
+      </a>
+      <nav>
+        <a href="shop.html">Experiences</a>
+        <a href="cart.html" class="cart-link">
+          🛒 Cart
+          <span class="cart-count" id="cart-count" style="display:none;">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE HEADER  (green success theme)
+    ═══════════════════════════════════════════ -->
+    <div class="page-header" style="background: linear-gradient(135deg, #065F46 0%, #059669 100%);">
+      <h1>🎉 Order Confirmed!</h1>
+      <p>The ostrich has been notified. He is very excited. Possibly too excited.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         CONFIRMATION CONTENT  (rendered by JS below)
+    ═══════════════════════════════════════════ -->
+    <section class="confirmation-section">
+      <div id="confirmation-content">
+        <!-- Injected by renderConfirmation() -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer>
+    <p>
+      &copy; 2026 <strong>Purple Ostrich Experiences Ltd.</strong> &nbsp;·&nbsp;
+      <a href="index.html">Home</a> &nbsp;·&nbsp;
+      <a href="shop.html">Shop</a>
+    </p>
+  </footer>
+
+  <script src="https://fastshoes.co.za/jobse/otherfiles/script.js"></script>
+
+  <script>
+    /**
+     * Reads the saved order from localStorage, renders the confirmation UI,
+     * fires a mock GTM dataLayer push to the console, then clears the cart.
+     *
+     * TRACKING NOTE FOR YOUR TEAM
+     * ─────────────────────────────────────────────────────────────────────────
+     * This page pushes a `purchase` event object to:
+     *   1. console.log()       → visible in DevTools Console
+     *   2. window.dataLayer[]  → available for GTM triggers once GTM is added
+     *
+     * The structure matches the GA4 Enhanced Ecommerce `purchase` schema so
+     * that your GTM tags can be configured without any changes.
+     * ─────────────────────────────────────────────────────────────────────────
+     */
+    function renderConfirmation() {
+      const container = document.getElementById('confirmation-content');
+
+      // ── Read order from localStorage ──────────────────────────
+      let order = null;
+      try {
+        const raw = localStorage.getItem(ORDER_KEY);
+        order = raw ? JSON.parse(raw) : null;
+      } catch {
+        order = null;
+      }
+
+      // ── No order found — user navigated here directly ─────────
+      if (!order) {
+        container.innerHTML = `
+          <div class="no-order">
+            <div class="no-order-icon">🤔</div>
+            <h2>No order found here.</h2>
+            <p>
+              Did you wander in by accident? No judgement — the ostrich does it
+              constantly. Head to the shop and try again!
+            </p>
+            <a href="shop.html" class="btn btn-primary">Browse Experiences</a>
+          </div>
+        `;
+        return;
+      }
+
+      // ── Build order items HTML ─────────────────────────────────
+      const itemsHTML = order.items.map(item => `
+        <div class="order-item">
+          <span class="order-item-name">${item.emoji} ${item.name}</span>
+          <span class="order-item-qty">× ${item.quantity}</span>
+          <span class="order-item-price">$${(item.price * item.quantity).toFixed(2)}</span>
+        </div>
+      `).join('');
+
+      // ── Render confirmation card ───────────────────────────────
+      container.innerHTML = `
+        <div class="success-icon">🎊</div>
+        <h1>You're All Set!</h1>
+        <p class="lead">
+          Your booking is confirmed and paid for (sort of). Prepare yourself
+          mentally — there really is no preparing yourself for this.
+        </p>
+
+        <div class="order-id-badge">Order ID: ${order.orderId}</div>
+
+        <!-- Order line items -->
+        <div class="order-summary-card">
+          <h3>📋 Order Summary</h3>
+
+          ${itemsHTML}
+
+          <div class="summary-line-sm">
+            <span>Subtotal</span>
+            <span>$${order.subtotal.toFixed(2)}</span>
+          </div>
+          <div class="summary-line-sm">
+            <span>Ostrich Handling Fee (10%)</span>
+            <span>$${order.tax.toFixed(2)}</span>
+          </div>
+          <div class="order-total-row">
+            <span>Total Paid</span>
+            <span>$${order.total.toFixed(2)}</span>
+          </div>
+        </div>
+
+        <!-- Developer / tracking note -->
+        <div class="dev-note" role="note" aria-label="Developer tracking note">
+          <span class="dev-label">🔧 DEV / TRACKING NOTE</span><br />
+          A mock GTM <span class="dev-key">'purchase'</span> dataLayer event has been
+          pushed to the browser console and to <span class="dev-key">window.dataLayer[]</span>.<br />
+          Open <strong>DevTools → Console</strong> to inspect the full event object.
+        </div>
+
+        <div class="confirmation-actions">
+          <a href="shop.html" class="btn btn-primary">Book Another Experience</a>
+          <a href="index.html" class="btn btn-outline">Back to Home</a>
+        </div>
+      `;
+
+      // ── Build the mock GTM dataLayer purchase event ────────────
+      //
+      //  This object mirrors the GA4 Enhanced Ecommerce "purchase" schema.
+      //  Your GTM tags should be able to consume it without modification
+      //  once the real GTM snippet is added inside <head>.
+      //
+      const dataLayerEvent = {
+        event: 'purchase',
+        ecommerce: {
+          transaction_id: order.orderId,
+          value:          order.total,
+          tax:            order.tax,
+          shipping:       0,
+          currency:       'USD',
+          items:          order.items.map((item, index) => ({
+            item_id:   String(item.id),
+            item_name: item.name,
+            index:     index,
+            price:     item.price,
+            quantity:  item.quantity
+          }))
+        }
+      };
+
+      // 1. Styled console output — easy for your team to spot
+      console.log(
+        '%c🦤 Purple Ostrich — Mock GTM dataLayer Push',
+        'color:#7C3AED; font-size:14px; font-weight:bold; padding:2px 0;'
+      );
+      console.log(
+        '%cEvent: purchase  |  Order: ' + order.orderId + '  |  Total: $' + order.total.toFixed(2),
+        'color:#059669; font-size:12px;'
+      );
+      console.log(JSON.stringify(dataLayerEvent, null, 2));
+
+      // 2. Push to window.dataLayer so real GTM (once inserted) picks it up
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push(dataLayerEvent);
+
+      // ── Clear the cart now that the order is confirmed ─────────
+      //    (We intentionally keep ORDER_KEY so the page survives a refresh.)
+      localStorage.removeItem(CART_KEY);
+      updateCartCount();
+    }
+
+    // Kick it off
+    renderConfirmation();
+  </script>
+
+</body>
+</html>
